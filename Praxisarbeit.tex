@@ -1,0 +1,72 @@
+\documentclass[a4paper,12pt]{report}
+
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+%\usepackage{subfigures}
+\usepackage{lmodern}
+\usepackage[german]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{chngcntr}
+\usepackage{tabularx}\counterwithout{footnote}{chapter}
+\usepackage[backend=biber]{biblatex}
+\usepackage{pdfpages}
+\usepackage{microtype}
+\usepackage[bottom]{footmisc}
+\usepackage[labelfont={bf,sf},font={small},labelsep=space]{caption}
+
+\lstset{basicstyle=\ttfamily,captionpos=b,numbers=left, stepnumber=1,frame=single, numberstyle = \tiny,breaklines=true}
+
+\title{Aufbau und Bewirtschaftung eines Financial-Data Warehouses (FDW) mit Hilfe des ETL-Tools Informatica}
+\author{Johannes Schwarz}
+\addbibresource{Literatur.bib}
+
+
+\begin{document}
+\begin{titlepage}
+	\centering
+	\includegraphics[width=0.25\textwidth]{Images/DHBWLogo.png}\par\vspace{0.25cm}
+	{\scshape\LARGE Duale Hochschule Baden-Württemberg Mannheim \par}
+	{\scshape Fakultät Technik - Studiengang Angewandte Informatik\par}
+	\vspace{1cm}
+	{\scshape\Large Praxisarbeit zum 3. Semester\par}
+	{Im Zeitraum Januar 2021 bis März 2021\par}
+	\vspace{1cm}
+	{\huge\bfseries  Aufbau und Bewirtschaftung eines Financial-Data Warehouses (FDW) mit Hilfe des ETL-Tools Informatica\par}
+	\vspace{0.5cm}
+	{\Large\itshape Johannes Schwarz\par}
+	\vspace{0.25cm}
+	{\itshape Matrikelnummer, Kurs: 9446662, MA-TINF19AI2\par}
+	\vspace{0.5cm}
+	{bei der DZ BANK AG, Frankfurt a.M.\par}
+	{Betriebliche Betreuer\par}
+	{Thomas \textsc{Kerber}\par}
+	{\includegraphics[scale=0.2]{Anmerkungen/Unterschriften.png}\par}
+
+	\vfill
+
+% Bottom of the page
+	{\large Abgabedatum: 30.09.2021\par}
+\end{titlepage}
+\tableofcontents
+\addcontentsline{end}{chapter}{Literatur}
+
+%\includepdf[pages=1]{Anmerkungen/Reflexion.pdf}
+
+\input{Sperrvermerk}
+\input{Erklärung}
+\input{Abstract}
+
+\input{Einleitung}
+\input{Datawarehouse}
+\input{Datenmodellierung}
+\input{ETL}
+\input{Anwendungsbeispiel}
+\input{Fazit}
+
+\printbibliography
+\end{document}

@@ -1,0 +1,56 @@
+\chapter{Die Anwendung des ETL-Prozesses in der Erstellung und Bewirtschaftung des Financial Data Warehouses(FDW)}\label{cap:Anwendungsbeispiel}
+In diesem Kapitel möchte ich auf ein Anwendungsbeispiel des ETL-Prozesses eingehen. Hierbei handelt es sich um die Erstellung und Bewirtschaftung eines financial Data Warhouses (kurz:FDW) im Umfeld der DZ BANK AG. Dieses FDW wird genutzt, um Geschäftsdaten zu speichern und zur Analyse zu verwenden. Die Quelldaten bestehen aus zwei getrennten Dateien, BOND(engl.: Anleihen) und MASTERDATA. Diese werden immer abhängig von Handelstag des jeweiligen Geschäfts und einem Time\_Stamp geschrieben. 
+\begin{figure}[H]
+	\begin{center} 
+		\includegraphics[width=\linewidth]{Images/FDW_BOND}
+		\caption{Beispiel des Datensatzes für BOND\cite{Intern}}
+		\label{fig:BOND}
+	\end{center}
+\end{figure}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=\linewidth]{Images/FDW_Masterdata}
+		\caption{Beispiel des Datensatzes für MASTERDATA\cite{Intern}}
+		\label{fig:MASTERDATA}
+	\end{center}
+\end{figure}
+
+\autoref{fig:MASTERDATA} und \autoref{fig:BOND} zeigen einen Ausschnitt aus den Input-Dateien für das FDW. Diese Daten werden getrennt von einander als csv-Dateien\footnote{comma seperated values, engl., frei: durch Komma getrennte Werte} eingelesen und sollen am Ende in einer Tabelle gespeichert sein. Da es mehrere Handelstage gibt, soll hier das Konzept der Historisierung angewendet werden: Die Handelstage sollen fortlaufend im FDW abgelegt werden. Hier kommt noch eine sogenannte LADE\_ID dazu, die eine Lieferung beziehungsweise ein Geschäft eindeutig zu identifiziert und auch den Handelstag eindeutig zuordnet. Diese ID wird genutzt, um Geschäfte, die an unterschiedlichen Handelstagen eingehen auf ihre Aktualität zu prüfen: Das Geschäft mit der höheren LADE\_ID ist das Neuere.
+\section{Datenmodellierung im FDW}
+\section{Der ETL-Prozess}\label{sec:ETL_FDW}
+Der ETL-Prozess kann hier in diesem Modell in die drei Layer aufteilt werden und wir jeweils etwas anders aufgebaut, um eine gute Strukturierung zu erhalten.
+\subsection{Landing-Layer}
+Im Landing-Layer werden die Quelldateien als .csv eingelesen. Diese eingelesenen Daten werden dann in die Tabellen LDG\_BOND oder LDG\_MASTERDATA geschrieben. Hierbei sind die erwarteten Datentypen in der Tabelle alle von Typ $varchar(100)$. Dies ermöglicht ein laden aller Daten, auch solcher, die nicht dem endgültigen Datentyp (siehe \autoref{subsec:ETL_COR}) entsprechen. In den LANDING-Tabellen soll allerdings noch keine Historie aufgebaut werden, sondern vor jedem Ladevorgang geleert werden.
+\subsection{CORE-Layer}\label{subsec:ETL_COR}
+im CORE-Layer werden erste Schritte der Bearbeitung der Daten vorgenommen.
+
+\lstinputlisting[label=Listing:Tab-BONDS,language=SQL,caption={Listing:Tab-BONDS}, numbers=left, stepnumber=1, numberstyle=\tiny,captionpos=b,frame=single, basicstyle=\tiny,breaklines=true]{Listings/ConstraintTableBONDS.sql}
+
+In \autoref{Listing:Tab-BONDS} wird die Tabelle BONDS generiert. Zusammen werden hier auch die \glqq endgültigen Datentypen\grqq~definiert. Diese Datentypen werden gebraucht, um damit Informatica arbeiten kann.  
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=.6]{Images/Infa_Expression}
+		\caption{Umwandlung der Input Daten in die Informatica Datenformate\cite{Intern}}
+		\label{fig:Infa_Exp}
+	\end{center}
+\end{figure}
+In \autoref{fig:Infa_Exp} ist eine Funktion zu sehen, die die Inputdaten transformiert. Hier werden alle Datensätze in ein Datenformat umgewandelt, mit dem Informatica arbeiten kann. Diese Transformation ist notwendig, da in der LANDING-Schicht alle Daten in $varchar(100)$-Felder geschrieben werden. Um sinnvoll mit den Daten weiter arbeiten zu können benötigt Informatica spezifischere Datentypen, wie beispielsweise $datetime$ als Datumsformat oder $decimal(s,p)$ für Dezimal mit $s$ Vorkommastellen und $p$ Nachkommastellen.
+
+Bei den Zeilen 11 und 12 kommen \glqq User-defined-functions\grqq~zum Einsatz. Diese ist so konzipiert worden, um in diesem Fall, einen Großteil von gängigen Datumsformaten zu erkennen. Danach werden diese in ein Datumsformat umgeschreiben, sodass Informatica damit arebiten kann. In den Zeilen 13-16 werden mittels der Funktion \glqq TO\_DECIMAL\grqq~alle Zahlenformate erkannt und in eine Dezimalfeld umgewandelt. In den Spalten davor sind gewisse Bedingungen für die jeweilige Zeile angegeben. Beispielsweise ist der Datentyp des jeweiligen Ports, dessen definierte Länge ($Prec$) oder welche Rolle der Port in der Expression einnimmt (Input, Output oder Variable). In Zeile 17 ist ein sogenannter DummyPort angelegt, der in der Expression auf den Wert 1 gesetzt wird. Dies ist notwendig, da der nachgelagerte Join-Operator einen Vergleich von zwei Werten benötigt, um die LADE\_ID zu den Werten , die in \autoref{fig:Infa_Exp} dargestellt sind, zusammenzuführen
+\subsection{Aufbereitungs-Layer}
+Im Aufbereitungs-Layer werden die Informationen aus den beiden unsprüglichen Tabellen, MASTERDATA und BOND zusammengeführt werden. Basis hierfür sind die jeweiligen Tabellen aus dem CORE-Layer, in dem die Daten schon im richtigen Dateityp vorhanden sind. Als gemeinsamer Schlüssel dient hierbei die \glqq GESCHAEFTS\_ID\_INSTRUMENT\grqq~in Kombination mit dem \glqq HANDELSTAG\grqq~ Sollten zu einem HANDELSTAGmehrere Lieferungen zugeordnet sein, wird jeweils der jüngste Datensatz genommen. Dies bedeutet, der Datensatz mit der größten LADE\_ID zum HANDESTAG. 
+Zusätzlich soll ein Feld \glqq NOMINAL\_DELTA\grqq angelegt werden, welches die Differenz der Werte des Nomials aus dem Vortag und desses aus dem aktuellen Handelstag abspeichert.
+%einbinden einer Grafik
+%\begin{figure}
+%    \subfigure[Tabelle LDG_BOND]{\includegraphics[width=0.49\textwidth]{Images/Table_LDG_BONDS}}
+%    \subfigure[Tabelle LDG_MASTERDATA]{\includegraphics[width=0.49\textwidth]{Images/Table_LDG_MASTER}}
+%    \caption{BOND und MASTERDATA Tabellen im LANDING-Layer mit zugehörigen Datentypen}
+%    \label{fig:LDG}
+%\end{figure}
+%\begin{figure}
+%    \subfigure[Tabelle COR_BOND]{\includegraphics[width=0.49\textwidth]{Images/Table_COR_BONDS}}
+%    \subfigure[Tabelle COR_MASTERDATA]{\includegraphics[width=0.49\textwidth]{Images/Table_COR_MASTER}}
+%    \caption{BOND und MASTERDATA Tabellen im LANDING-Layer mit zugehörigen Datentypen}
+%    \label{fig:COR}
+%\end{figure}
+

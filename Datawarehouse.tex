@@ -1,0 +1,101 @@
+\chapter{Wege der Datenspeicherung}
+Es gibt viele verschiedene Wege, um Daten in geordneten Dateien\footnote{Sammlung von Informationen gleichartiger Dinge auf persistentem Speichermedium} abzulegen. Hierfür
+können Datenbanken genutzt werden. Eine Datenbank ist eine Sammlung von Daten,
+die untereinander in logischer Beziehung stehen“ Es ist eine Organisation von Daten, die
+darauf ausgelegt ist auf Dauer persistiert 2 und zusätzlich flexiblen und sicheren Gebrauch
+zu gewährleisten. Weiter umfasst die Datenorganisation sowohl eine Datenbasis, als eine
+zugehörige Datenverwaltung (oder Datenbankmanagementsystem). Eine Datenbank soll
+dazu dienen große Datenmengen strukturiert zu speichern und verwalten.\cite{Huckert:VL1_2}\cite{Gabler_Wirtschaftslex:Datenbank}
+\section{Die Operationale Datenbank}
+\subsection{Definition}
+Eine operationale Datenbank (DB) speichert und verwaltet Daten in Echtzeit. Dies
+bedeutet, dass bedeutet, dass Daten sowohl in Echtzeit geschrieben als auch gelöscht
+werden können.\cite{techopedia:Operationale_Datenbank} 
+Diese Datenbanken können mit der Sprache SQL (Structured query language) editiert werden.
+\subsection{Aufbau und Verwendung}
+Eine operationale Datenbank speichert Daten innerhalb eines Unternehmens oder einer Organisation. 
+Solche Daten können beispielsweise Gehaltsabrechnungen oder auch die Daten von Angestellten sein. \newline 
+Die wesentliche Charakteristik einer operationalen Datenbank ist die Auslegung auf die Verarbeitung von Echtzeit-Daten. 
+Hier werden Daten bezüglich des Tagesgeschäfts oder Kundendaten gespeichert.
+Bei operationalen Datenbanken besteht weiterhin kein anspruch auf eine schnelle Verarbeitung für neue Datensätze, was die Datenbank an sich Unperformater macht.
+Da sie allerdings auf beispielsweise ein Tagesgeschäft ausgelegt ist, muss das nicht weiter beachtet werden.
+\cite{ComputerWeekly:Datenbanksysteme} \cite{techopedia:Operationale_Datenbank}
+\section{Die analytische Datenbank als Gegenstück zu operationalen Datenbank}
+Eine Analytische Datenbank ist, im Gegensatz zu einer Operationalen, eine Datenbank, die zeithistorische Daten sammeln kann.
+In solchen Datenbanken werden beispielsweise historische Daten von Business-Metriken schreibgeschützt gesammelt. 
+Solche Daten können Verkaufszahlen, Lagerbestände oder ähnliches sein.
+Verantwortliche des Unternehmens oder Mitarbeiter können aus den Datenbanken Analyse-Daten gewinnen.
+Die gespeicherten Daten werden in regelmäßigen Abständen aktualisiert, um die sonstigen Systeme eines Unternehmens in der analytischen Datenbank abzubilden.
+Typischerweise ist diese Datenbank darauf ausgelegt eine \glqq Business-Intelligence (BI)\grqq\footnote{\glqq Prozess, der Daten in Informationen transformiert und diese wiederum durch die Anwendung von Erfahrungen in Wissen\grqq\cite{BigData:BI}}~oder andere analytische Anwendungen zu unterstützen, hierfür meist auch als Teil eines Data Warehouses.
+Dies unterscheidet die analytische Datenbank von einer Operationalen.
+\cite{CW:analytische_Datenbank}\footnote{Es gibt noch weitere Datenbankarten, wie hierachisch-organisierte oder Objektorientierte Datenbanken, auf die ich allerdings im Rahmen dieser Arbeit nicht näher eingehe}
+\section{Die Relationale Datenbank als Modellierungsart für Datenbanken}
+\subsection{Definition}
+\glqq Eine relationale Datenbank ist ein Typ von Datenbanken, der die Speicherung und den Zugriff auf miteinander verbundener Datenpunkte ermöglicht.\grqq\cite{Oracle:rel_DB}\newline
+Sie basieren im Grunde auf dem relationalen Modell, welches eine intuitive und einfache Art beschreibt, wie Tabellen darzustellen sind.
+\subsubsection{Das relationale Modell}
+Das Relationale Modell besteht im wesentlichen aus 3 wichtigen Bausteinen:
+\begin{itemize}
+	\item {Tabellen}
+	\item {Attributen}
+	\item {Beziehungen (Relations)}
+\end{itemize}
+Ein relationales Datenbankmodell ist beschrieben durch eine Ansammlung von Tabellen, die in einer Beziehung (Relation) zueinander stehen. Mathematisch werden hier Relationen als Mengen von Tupeln gesehen. In einer Menge gibt es jedoch keine Duplikate, wohingegen in einer Tabelle, welche mit SQL generiert wurde Duplikate vorhanden sein können.  Jede Zeile einer Tabelle (Tupel) ist demnach ein Datensatz in der Datenbank. Jedes Tupel besitzt eine große Reihe an Eigenschaften (Attribute), die die Spalten einer Tabelle sind. \cite{DatenbankenVerstehen:Relationales_Datenbankmodell}\cite{Huckert:VL4_5}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=14cm]{Images/Rel_DB_BSP}
+		\caption{Beispiel eines relationalen Datenbankmodells \cite{DatenbankenVerstehen:Relationales_Datenbankmodell}}
+		\label{fig:ER-Modell}
+	\end{center}
+\end{figure}
+In \autoref{fig:ER-Modell} ist ein Beispiel eines relationalen Datenbankmodells zu sehen.Dieses Modell zeigt die Beziehung verschiedener Tabellen zueinander. Hier wird zudem auch auf das Konzept der Normalisierung geachtet, da ein solches Datenbankmodell nur durch korrekte Normalisierung und deren Normalformen erstellt werden kann (mehr in \autoref{ch:Data_Mod_Normal})
+Diese Modellierung ermöglicht es den Entwicklern und Anwendern eine einheitliche Struktur zur Datenspeicherung zu schaffen\cite{Oracle:rel_DB}
+\subsection{Aufbau und Verwendung}
+\glqq Im relationalen Modell sind die logischen Datenstrukturen - die Datentabellen - von den physischen Datenstrukturen getrennt\grqq\cite{Oracle:rel_DB}\newline
+Diese Trennung ermöglicht es den physischen Speicher in Rechenzentren besser Verwalten zu können ohne dass die Struktur der Speicherung von Datensätzen verändert werden muss. Weiter wird eine relationale Datenbank dafür verwendet, um Daten durch Computersysteme zu Speichern und Bearbeiten. \cite{Oracle:rel_DB}\cite{Bigdata-Insider:rel_DB}
+Dieses Konzept, Datenbanken nach dem relationalen Modells zu strukturieren, ist von großer Relevanz. 
+Dieses Modell bietet viele Vorteile hinsichtlich der Datenhaltung und Datestellung der Datenmodellierung. 
+Weiterhin lassen sich dadurch praktisch das Format und die Beziehungen zwischen verschiedenen Entitäten darstellen.
+\section{Das Data Warehouse}
+\subsection{Definition}
+Ein Data Warehouse ist ein zentrales Datenbanksystem, welches hauptsächlich zu Analysezwecken in Unternehmen eingesetzt wird. \glqq Dieses System extrahiert, sammelt und sichert relevante Daten aus verschiedenen heterogenen Datenquellen.\footnote{Eine Datenquelle ist heterogen, wenn die Struktur der Daten uneinheitlich ist.}\grqq \cite{Bigdata-Insider:DW}
+\subsection{Aufbau und Verwendung}
+Das Data Warehouse (auch Datenlager) ist eine Plattform, die Daten aus verschiedenen Datenquellen sammelt und nachgelagerte Analysesysteme versorgt. Die Datenbestände innerhalb des Data Warehouses sind daher strukturiert, sodass außerhalb des DW eine einheitliche Schnittstelle zum Abfragen der Daten vorhanden ist.
+Das Data Warehouseing besteht aus vier verschiedenen Teilprozessen:
+\begin{itemize}
+	\item {Datenbeschaffung}: Datenextraktion aus verschiedenen unterschiedlichen Datenbeständen
+	\item {Datenhaltung}: Speicherung der Daten im Data Warehouse
+	\item {Datenversorgung}: Versorgung der Systeme, welche die Daten benötigen, Bereitstellung von Data Marts\footnote{Datenbank, die für die Anforderungen einer bestimmten Benutzergruppe konzipiert ist\cite{Talend:Data_Mart}}
+	\item {Datenauswertung}: Analyse und Auswertung der Datenbestände
+\end{itemize}
+Weiterhin soll das Data Warehouse als die \glqq Single Source of truth\grqq (Die einheitliche Version/Quelle der Wahrheit) dienen und den Benutzern Zugriff auf diese Wahrheit ermöglichen, damit Berichte erstellt oder zeitnahe Geschäftsprognosen getroffen werden können. Das Data Warehouse ist als ein zentrales Informationssystem, in dem Daten aus mehreren Quellen zusammengefasst werden und in dem eine Datenhistorie aufgebaut wird.
+\subsection{Zentrale Merkmale des DWH}
+\begin{itemize}
+	\item Fachorientiert - Das DWH orientier sich an einem bestimmten Thema und liefert dazu Informationen, anstelle der aktuellen Geschäftszahlen
+	\item Integriert - Integration von Daten mehrerer Datenquellen und die Vereinheitlichung auf einen genutzten Standard
+	\item Zeitunterschied - Die Daten im Data Warehouse liefern Daten in historischer Perspektive
+	\item nicht flüchtig - Es gibt kein Löschen von älteren Daten im DWH, sondern es wird eine Historie aufgebaut und das DHW immer erweitert
+\end{itemize}
+\cite{Bigdata-Insider:DW}\cite{Astera:Kimmball_Inmon}
+\section{Der Data Mart}
+Der Data Mart ist genauso wie das Data Warehouse ein Repository\footnote{Lager, Depot - verwaltetes Verzeichnis zur Speicherung und Beschreibung digitaler Objekte\cite{Wikipedia:Repository}}, in dem Daten bis zur Verwendung verwaltet und gespeichert werden. Im Gegensatz zum Data Warehouse, in dem sämtliche Informationen gespeichert sind, spiegeln Data Marts nur die Anforderungen einer bestimmten Abteilung oder Geschäftsfunktion. Hauptsächlich sollen Data Marts nur einen kleinen Teildatensatz vom gesamt Data Warehouse isolieren beziehungsweise partitionieren\footnote{Vorgang des Aufteilens}.
+
+Ein Data Mart kann in zwei verschiedenen Ansätzen erstellt werden. Zum einen kann der Top-Down-Ansatz genutzt werden, bei welchem der Data Mart auf der Grundlage eines bereits bestehenden Datawarehouses erstellt werden. Andererseits kann er aber auch aus anderen Quellen, wie internen operativen Systemen oder externen Daten erstellt werden.\cite{Talend:Data_Mart}
+\begin{table}[H]
+	\centering
+	\begin{tabular}{l|ll}
+						& Data Mart 			& Data Warehouse \\
+						\hline
+	Größe				& < 100 GB				& > 100 GB \\
+	Subjekt				& Ein Subjekt			& Mehrere Subjekte\\
+	Umfang				& Unternehmensbereich	& Gesamtes Unternehmen\\
+	Datenquellen		& Wenige Quellen		& Viele Quellsysteme\\
+	Datenintegration	& Ein Themenbereich		& Alle Geschäftsdaten
+	\end{tabular}
+	\caption{Verdeutlichung der Unterschiede zwischen Data Mart und Data Warehouse}
+\end{table}
+\section{Der Data Lake}
+\subsection{Definition}
+Der Data Lake ist ein System oder Repository in dem Daten im Rohformatformat\footnote{Schreibe von Daten auf ein Speichermedium, ohne Bearbeitung, häufig auch ohne Digitalisierung} zu speichern.Der Data Lake kann strukturierte\footnote{Daten mit einer erkennbaren Struktur} und nicht strukturierte Daten aufnehmen. Weiterhin lässt sich der Data Lake zur Big-Data-Analyse einsetzen\footnote{Massendatenanalyse, angesichts des Umfangs der Thematik werde ich darauf nicht näher eingehen}.\cite{Wikipedia:Data_Lake} \cite{BigData-Insider:Data_Lake}
+\subsection{Aufbau und Verwendung}
+Im Data Lake sollte gewisse Grundfunktionalitäten vorhanden sein, um die Anforderungen der Anwendungen zu erfüllen, die auf den Data Lake als Informationsquelle zurückgreifen. Durch die Ablage sowohl von strukturierten, als auch von unstrukturierten Daten sollen Datensilos\footnote{Datenbestände und Informationen, die an verschieden Orten liegen und auf die nur bestimmte Abteilungen oder Nutzergruppen innerhalb des Unternehmens Zugriff haben\cite{DigitalWiki:Datensilo}} vermieden werden. Im Gegensatz zum Data Warehouse können die Daten im Data Lake demnach auch unstrukturiert sein. Dies bedeutet, dass es auch möglich ist beispielsweise Bilder in einem Data Lake abzulegen.  \cite{BigData-Insider:Data_Lake}\cite{AT:Data_Lake}

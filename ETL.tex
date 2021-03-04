@@ -1,0 +1,83 @@
+\chapter{Extract - Transform - Load: Der ETL Prozess}
+Der ETL (Extrct - Transform -Load) Prozess wird im Umfeld des Data Warehousing eingesetzt. Dieser wird dazu genutzt, um Daten aus verschiedenen Datenquellen in eine einheitliche Struktur zu bringen und in einem Data Warehouse abzulegen. 
+\begin{itemize}
+	\item {Extract - Entnehmen} \newline Im Extract-Prozess werden Daten aus heterogenen Datenbanken extrahiert und ausgelesen
+	\item {Transform - Transformieren}\newline Der Transformationsschritt bringt die gelesenen Daten in eine einheitliche Struktur
+	\item {Load - Laden}\newline
+	Nach der Transformation werden die Daten in das Data Warehouse geschrieben
+\end{itemize}
+\section{Structured Query Language}
+Die Structured Query Language (SQL, Engl.: Strukturierte Abfrage-Sprache) ist eine standardisierte Sprache, zum Abfragen, definieren und bearbeiten von Datenstrukturen. Diese Strukturen und darauf basierende Datenbestände sind in relationalen Datenbanken abgelegt. Daher stellt SQL eine Datenbanksprache dar. 
+
+Die Sprache SQL setzt sich aus 3 verschiedenen Funktionen der zusammen:
+\begin{itemize}
+	\item {DDL - Data Definition Language:}\newline
+	Dient der Definition von Tabellen und anderer Datenstrukturen (Bsp.: Datenbank/ Tabelle erzeugen,...)
+	\item {DCL - Data Control Language:}\newline
+	Regelt die Kontrolle des Zugriffs (Bsp.: Zugriffsrechte gewähren/entziehen)
+	\item {DML - Data Manipulation Language:}\newline
+	Befehle für die Manipulation von Daten und der Datenabfrage (Bsp.: Tabellen abfragen/löschen/hinzufügen,...)
+\end{itemize}
+
+Allerdings kann SQL auch dazu verwendet werden um Daten zu transformieren. Jedoch handelt es sich hier weniger um einen ETL, als eher um einen ELT-Prozess (Extract-Load-Transform). Da es sich bei SQL um eine Sprache handelt, die nur auf der konkreten Datenbank ausgeführt werden kann, muss zuerst der Schritt der Transformation ausgeführt werden. Hierzu werden Daten direkt in der Datenbank selbst transformiert bevor sie an eine andere Tabelle übergeben werden können. Die Transformation mit SQL bietet den Vorteil, dass diese eine hohe Geschwindigkeit ermöglicht ($\sim 20.000.000$ Datentransformationen in 3 Minuten) und einen hohen Grad an Flexibilität ermöglicht wird.
+
+Durch diesen Grad an Flexibilität wird es ebenfalls möglich SQL-Transformationen auf Basis von gewissen Regeln automatisiert generiert werden können. Dadurch kann der Kunde selbst die Regeln definieren und diese ändern oder anpassen. Dadurch werden SQL-Skripte automatisch generiert und aus den Regeln abgeleitet. 
+%\begin{figure}[H]
+%	\begin{center}
+%		\includegraphics[scale=0.4]{Images/Regeln_Auszug}
+%		\caption{Auszug aus Regel-Datei für ZGS\footnote{ZGS:}\cite{Intern}}
+%		\label{fig:SQL_Regeln}
+%	\end{center}
+%\end{figure}
+In %\autoref{fig:SQL_Regeln}
+ist ein Auszug einer Regel-Datei zu sehen. Hier können Regeln der Transformation geregelt werden und es wird automatisiert ein entsprechender SQL-Skript generiert. 
+\lstinputlisting[language=SQL,label={lst:ELT-SQL},caption={Beispiel einer Transformation mittels SQL\cite{SQLORA:Data_Historization}}, numbers=left, stepnumber=1, numberstyle=\tiny,captionpos=b,frame=single, basicstyle=\tiny,breaklines=true]{Listings/ETL.sql}
+In \autoref{lst:ETL-SQL}
+
+\cite{ITEW:Alex_02-08}\cite{Wikipedia:SQL}\cite{Hempel:SQL}\cite{Huckert:VL1_2}\cite{SQLORA:Data_Historization}
+\section{Das ETL-Werkzeug Informatica}
+Informatica Corporation \textsuperscript{\textcopyright} bietet mit Informatica eine Software zur Datenintegration. Mittels dieser ist es möglich einen ETL-Prozess zu entwickeln, der für ein Data Warehousing genutzt werden kann. In gewisser Weise bildet Informatica einen Wrapper\footnote{\glqq Ein Stück Software, welches ein anderes Stück Software umgibt\grqq\cite{Wikipedia:Wrapper}} für und um SQL. Informatica selbst ist hauptsächlich für die Transformation der Daten verantwortlich. SQL bildet den \glqq Zulieferer und Abtransporter\grqq~für die Datensätze. Dies bedeutet, dass mittels SQL die Daten nach Informatica geladen (Extract) und nach der Transformation wieder in eine andere  Datenbank/ein Data Warehouse geladen werden (Load).
+
+Die Transformation selbst kann in Informatica über eine grafische Benutzeroberfläche erstellt werden, wobei der erste Transformationsschritt immer eine Konvertierung in die Datenformate von Informatica darstellt.
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.2]{Images/Infa_Designer}
+		\caption{Überblick über den Designer bei Informatica \cite{Intern}}
+		\label{fig:Infa_Designer}
+	\end{center}
+\end{figure}
+\autoref{fig:Infa_Designer} zeigt den Überblick über den Informatica Designer. Hier können sog. Mappings gebaut oder über verschiedene Arten Quellen (\glqq Sources\grqq) und Ziele (\glqq Targets\grqq) definiert werden. Diese können sowohl Dateien sein, die lokal auf einem Rechner oder Server vorhanden sind, oder Tabellen, welche selbst in einer Datenbank  vorhanden sind. Weiterhin sind in der linken Spalte alle Ordner zu sehen, die mit dem Repository verknüpft sind. Zu einem Repository können mehrere Ordner mit vielen untergeordneten Quellen und Mappings gehören.
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.6]{Images/Infa_Mapping}
+		\caption{Beispiel eines Mappings in Informatica im ETL-Prozess in der Überführung vom LANDING-Layer zum CORE-Layer \cite{Intern}}
+		\label{fig:Infa_Mapping}
+	\end{center}
+\end{figure}
+In \autoref{fig:Infa_Mapping} ist ein Beispiel eines Mapping in Informatica zu sehen. Hier wird ein Teil des ETL-Prozesses beschreiben, bei dem Daten aus dem LANDING-Layer in den CORE-Layer überführt werden. Dabei werden, im unteren Strang, die Daten zunächst aus der LANDING-Schicht durch einen sogenannten \glqq Source-Qualifier\grqq~geladen. Da in der LANDING-Schicht alle Daten gelesen werden müssen, sind die vorgegebenen Datenfelder $varchar(100)$-Felder. Dadurch werden alle Zeichen bis zu einer Länge von 100 ohne Fehler eingelesen. Danach müssen alle Daten durch eine \glqq Expression\glqq laufen, damit diese in Datenformate umgewandelt werden können, mit denen Informatica arbeiten kann. Eine kleine Schwierigkeit besteht in den Datumsformaten. Für diese gibt es etliche verschiedene Schreibweisen (YYYY-MM-DD, DD.MM.YYYY, HH12:MI:SS, HH24:MI:SS, um nur ein paar Beispiele hier zu nennen). Diese müssen alle aufgelöst werden, damit Informatica damit arbeiten kann. Dafür kann es sehr von Vorteil sein eigene Funktionen zu definieren, was ebenfalls in Informatica möglich ist. Dazu können im Arbeitsordner über \glqq User-defined Functions\grqq~eigene Funktionen definiert werden.
+
+Der obere Strang liefert die Verarbeitung für die LADE\_ID, die dafür genutzt wird, um eine Lieferung eindeutig zu identifizieren (genaueres zu diesem Beispiel in \autoref{cap:Anwendungsbeispiel} \glqq Die Anwendung des ETL-Prozesses in der Erstellung und Bewirtschaftung des Financial Data Warehouses(FDW)\grqq). Dabei wird hier die Ziel-Tabelle bereits als Quelle definiert, um eine LADE\_ID zu generieren, die sich von der größten bereits vorhandenen LADE\_ID unterscheidet. De facto wird die größte um 1 erhöht. 
+
+Danach werden die Daten mittels eines Joiner-Operators gejoint. Dies bedeutet, dass beide Stränge zusammen in einen geschrieben werden. 
+Hier bedeutet das lediglich, dass zu den Daten aus der LANDING-Tabelle die LADE\_ID hinzukommt. Da der Joiner allerdings zwingend eine Bedingung braucht, um korrekt zu arbeiten, müssen zwei \glqq Dummy-Ports\grqq~deklariert werden, die eine triviale Bedingung bilden. Danach werden alle Daten in die Target-Tabelle geschrieben und das Mapping ist abgearbeitet. \\
+\\
+Allerdings kann Informatica dieses Mapping nicht allein laufen lassen und daher muss es in einen Workflow eingebunden werden. Dieser Workflow kann noch mit einigen anderen Befehlen, wie einen abgesetzten Befehl über die Kommando-Zeile des jeweiligen Betriebssystems, erweitert werden.
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.4]{Images/Infa_Workflow}
+		\caption{Informatica-Workflow für den Schritt von Files nach Landing \cite{Intern}}
+		\label{fig:Infa_Workflow}
+	\end{center}
+\end{figure} 
+\autoref{fig:Infa_Workflow} zeigt einen solchen Workflow, der den Schritt von \glqq Roh-Dateien\glqq~in die LANDING-Schicht. Dieser ist erweitert durch einen Befehl in der Kommandozeile in Linux (Genaueres über die Bedeutung von BOND und MASTERDATA und den Befehlin \autoref{cap:Anwendungsbeispiel}) 
+Dieser Workflow kann dann gestartet werden. Der Status wird dann in Informatica Workflow Monitor angezeigt.
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.6]{Images/Infa_Monitor}
+		\caption{Informatica Workflow Monitor \cite{Intern}}
+		\label{fig:Infa_Monitor}
+	\end{center}
+\end{figure}
+\autoref{fig:Infa_Monitor} zeigt einen ausgeführten Workflow. Es ist einzeln aufgeschlüsselt, welcher Teil welchen Status hat. So sind in diesem Beispiel alle erfolgreich durchgelaufen. Weiterhin ist es im Workflow Monitor möglich sich eine Log-Datei des Workflows oder der einzelnen Sessions anzeigen zu lassen und eventuelle Error oder Warnings zu überprüfen und zu korregieren. 
+\cite{ITEW:Thomas_02-08}\cite{Wikipedia:Informatica}
+

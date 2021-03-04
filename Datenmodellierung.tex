@@ -1,0 +1,155 @@
+\chapter{Datenmodellierung und Normalisierung}\label{ch:Data_Mod_Normal}
+Die Datenmodellierung spielt in der Gestaltung einer Datenbank eine wichtige und entscheidende Rolle. Sie bildet eine wesentliche Schnittstelle in der Kommunikation mit dem Kunden, oder innerbetrieblich zwischen Fachbereich und IT-Bereich. Hierfür gibt es unterschiedliche Modelle, die die Entwurfsphase einer Datenbank beschreiben:
+\begin{itemize}
+	\item {konzeptioneller Datenbankentwurf}\newline
+		Beim konzeptionellen Datenmodell wird definiert, welche Businessobjekte aus der \glqq realen Welt\grqq~auftauchen und welche Beziehungen diese untereinander haben. 
+	\item {Fachlicher Datenbankentwurf}\newline
+		Beim Fachlichen Datenbankentwurf geht es um eine Anforderungs- und Informationsanalyse.\cite{HS-Karslruhe:DB_Entwurf}Dieser Entwurf wird mit dem Fachbereich, der die Datenbank nutzen will durchgeführt, um erwartete Werte und potentielle Fehlerquellen identifizieren und mit Constraints\footnote{Einschränkungen, die Fehleingaben verhindern} vermeiden zu können. Weiterhin werden die Kardinalitäten\footnote{Beziehungsverhältnis zwischen Entitätsmengen\cite{Huckert:VL1_2}} zwischen den Entitäten definiert. Allerdings findet hier keine Generalisierung statt. Dies bedeutet, dass keine \glqq Vergröberung der Klassen\grqq, also weniger Informationen zu einer Klasse, vorgenommen wird.\cite{Möller:STS} Auf Grundlage dieses Entwurfes steht die Kommunikation mit dem Kunden, der meist keine fundierten Kenntnisse über die Datenbank besitzt.\cite{Möller:STS}
+	\item {Logischer Datenbankentwurf}\newline
+		Der nächste Schritt ist ein logischer Datenbankentwurf. Ziel dieses Entwurfs ist die Korrektheit und Lesbarkeit des Datenbankmodells, aber auch die Ablage von Daten in der Datenbank. So wird in dieser Phase beispielsweise festgelegt, ob alle Produkte in einer Tabelle festgehalten werden, oder ob alle Geschäftspartner in einer Tabelle stehen oder getrennt nach Käufer/Verkäufer in verschiedenen. Das Modell kann dabei in 2 verschiedene Teile untergliedert werden:
+		\begin{itemize}
+			\item {Systemunabhängig} \newline
+				Beim systemunabhängigen Modellen wird mit festen Abbildungsregeln\footnote{Gewisse Regeln, die abhängig von gewissen unternehmerischen Faktoren sind} gearbeitet. Dies bedeutet, dass diese Modellierung abhängig vom verwendeten Modell ist. Daraus ergibt sich ein Datenbankmodell, welches nur auf eine Datenbank mit gleichem Modell übertragen werden kann.
+			\item {Systemabhängig}  \newline
+				Systemabhängige Datenmodelle verwenden spezifische Funktionen und Funktionalitäten einer Datenbank. Daraus ergeben sich ein oder mehrere sogenannte DDL-Skript\footnote{Data Definition Language - Sprache, zur Anlage und Löschung von Datenbanken\cite{Huckert:VL1_2}}. Diese Skripte sind in der Sprache der jeweiligen Datenbank geschrieben und ermöglichen eine bessere Protierung\footnote{(über-)tragen oder Transport} auf andere Datenbanken, die die gleich Sprache sprechen. \newline\cite{DatenbankenVerstehen:logischer_Datenbankentwurf}\cite{DatenbankenVerstehen:konzeptioneller_Datenbankentwurf}
+		\end{itemize}
+	Weiterhin wird hier festgelegt, welche Modellierungsart (Data Vault, ER-Diagramm (\autoref{fig:ER-Modell}), Star-Modellierung(\autoref{fig:Star-Schema}), etc. )genutzt wird. 
+	\item {physischer Datenbankentwurf}\newline
+	Zuletzt steht der physische Datenbankentwurf. Hier werden die datenbankspezifischen Komponenten betrachtet. In dieser Phase muss sich auf eine Datenbank festgelegt werden und Aspekte wie:
+	\begin{itemize}
+		\item {Indizes:} Indexstruktur in einer Datenbank, die die Suche und das Sortieren nach bestimmten Einträgen/Datensätzen beschleunigt\cite{Wikipedia:Datenbankindex}
+		\item {Partitionierung:} Vorgang des Aufteilens eines physischen Datenträgers
+		\item {Speicherung:} 
+		\item {Spezielle Funktionen der Datenbank:} Funktionen, welche je nach Hersteller einer Datenbank unterschiedlich sein können. (Unterschiede zwischen Oracle- oder MSSQL-Datenbanken)
+	\end{itemize}
+	\cite{ITEW:Patrik_02.05}\cite{DatenbankenVerstehen:Physischer_Datenbankentwurf}
+\end{itemize} 
+\section{Von der Datenbank zum Data Warehouse}
+Das allgemeine Ziel der Datenbanken ist es eine strukturierte Speicherung von Daten zu gewährleisten. Dazu sollen zum einen so wenige Redundanzen\footnote{lat.:Überfluss - Mehrfaches abspeichern von Datensätzen} wie möglich erzeugt werden, zum anderen allerdings auch eine korrekte Eingabe der Daten zu ermöglichen. Dazu gibt es verschiedene Konzepte, die eingesetzt werden, um Datenmodellierung umzusetzen und auch zu standardisieren.
+\subsection{Die Theorie der Normalformen}
+Die Theorie der Normalformen versucht 3 Punkte zu bewirken:
+\begin{enumerate}
+	\item {Eliminieren von Redundanzen - Vermeiden mehrmaligen Speicherns des gleichen Datensatzes}
+	\item {Eliminieren von Anomalien - Vermeiden von Schwierigkeiten im Zusammenhang mit DML-Optionen\footnote{Data Manipulition Language - Sprache zum einfügen, löschen und ändern von Datensätzen}}
+	\item {Festhalten von realitätskonformen Sachverhalten - Gewährleistung der Richtigkeit eines Datensatzes}
+\end{enumerate}
+Als eine der wichtigsten Normalform in der Datenbankverwaltung hat sich die 3. Normalform etabliert. Diese Normalform schließt alle Eigenschaften der darunter liegenden (1. und 2.) Normalformen mit ein. 
+\subsubsection*{1.Normalform}
+Die Wertebereiche der Tabelle muss atomar sein, das bedeutet, dass der Wert eines Attributes nicht weiter in kleinere Werte heruntergebrochen werden kann.
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.4]{Images/1NF}
+		\caption{Vergleich Atomarer/nicht-Atomarer Wertebereich\cite{Knott:Normalformen}}
+		\label{fig:1NF}
+	\end{center}
+\end{figure}
+In \autoref{fig:1NF} ist zusehen, das in der 2. Tabelle besser nach bestimmten Datensätzen zu suchen ist, da keine Doppeltnennungen in einem Attribut vorhanden sind.\newpage
+
+\subsubsection*{2. Normalform}
+Zusätzlich muss jedes Nichtschlüsselattribut vom Primärschlüssel\footnote{Attribut, welches eine eindeutige Identifikation der realen Objekte erlaubt\cite{Wikipedia:Primärschlüssel}} voll funktional abhängig sein und nicht bereits von einem Teil der Schlüsselattribute
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.4]{Images/2NF}
+		\caption{Tabelle(n) in 2. Normalform\cite{Knott:Normalformen}}
+		\label{fig:2NF}
+	\end{center}
+\end{figure}
+Mathematisch gesehen ist ein Attribut B vom Attribut A voll funktional abhängig, wenn B alleine durch A bestimmt wird: $A\rightarrow B$.
+In \autoref{fig:1NF} ist das Attribut \colorbox[rgb]{.8,.8,.8}{\textcolor{orange}{Schwerpunkt}} voll funktional Abhängig vom Attribut Kurs, Allerdings hängt der Schwerpunkt eines Kurses nicht nur vom Kurs alleine ab. Diese Funktionale Abhängigkeit versucht die 2. Normalform zu vermeiden und so wird diese Tabelle in zwei getrennte Tabellen ausgelagert.
+Wie in \autoref{fig:2NF} zu sehen ist ist nun der Kurs voll funktional Abhängig.
+
+\subsubsection*{3. Normalform}
+Zusätzlich zu den Bedingungen der 1. und 2. Normalform darf Nicht-Schlüsselmerkmal transitiv von irgendeinem anderen Schlüssel abhängig sein. Transitiv abhängig bedeutet, dass ein Merkmal über Umwege funktional abhängig ist. Mathematisch kann das wie folgt ausgedrückt werden: $A\rightarrow B\rightarrow C$. Dies bedeutet: $C$ ist von $A$ transitiv abhängig, wenn es voll von $B$ und $B$ voll von $A$ funktional abhängig ist.
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.4]{Images/3NF}
+		\caption{Tabelle(n) in 3. Normalform\cite{Knott:Normalformen}}
+		\label{fig:3NF}
+	\end{center}
+\end{figure}
+In \autoref{fig:2NF} ist das Attribut \colorbox[rgb]{.8,.8,.8}{\textcolor{orange}{Trakt}} transitiv vom Schlüsselattribut \colorbox[rgb]{.8,.8,.8}{\textcolor{orange}{Kurs}} abhängig: Trakt ist alleine vom Schwerpunkt und der Schwerpunkt alleine vom Kurs abhängig (Trakt$\rightarrow$ Schwerpunkt$\rightarrow$ Kurs).
+Damit diese Tabelle gänzlich ohne transitive Abhängigkeiten gespeichert werden kann, müssen Informationen über den Schwerpunkt in eine neue Tabelle extrahiert werden.
+\cite{Huckert:VL3}\cite{Knott:Normalformen}
+Zwar bietet diese Art der Modellierung einige Vorteile, aber auch ein paar Nachteile, die es zu beachten gilt:
+\begin{itemize}
+	\item {Vorteile}
+	\begin{itemize}
+		\item Alle Datensätze werden nur einmal gespeichert
+		\item Wenige Redundanzen
+	\end{itemize}
+	\item{Nachteile}
+	\begin{itemize}
+		\item Schwer eine Historie zu erstellen (Gerade im Data Warehouse Umfeld wichtig)
+		\item Es sind viele Änderungen bei kleinen Datensatzanpassungen nötig
+		\item Es kann keine Parallelisierung bei Abfragen oder Einlesen vorgenommen werden
+	\end{itemize}
+\end{itemize}
+\subsection{Data Warehouse nach Kimball und Inmon und Data Vault nach Linstedt}
+Die Entwicklung in größeren Unternehmen geht hinsichtlich der Analyse von großen Datenbeständen in die Richtung des Data Warehouses. Zur Datenmodellierung gibt es zwei unterschiedliche Ansätze: Der Ansatz nach Kimball und der Ansatz nach Inmon. Der dritte Ansatz richtet sich nach Linstedt und beschreibt ein Data Vault.
+
+\subsubsection{Data Vault nach Linstedt}\label{subsec:DataVault}
+Das Konzept der Data Vault Modellierung wurde in den 1990er-Jahren von Dan Linstedt entwickelt und setzt damit den Fokus auf die Bedürfnisse des Unternehmens.
+\begin{quote}
+	\glqq Der Data Vault ist ein detailorientierter, historisch nachverfolgender und eindeutig verknüpfter Satz normalisierter Tabellen, die einen oder mehrere Funktionsbereiche des Geschäfts unterstützen. Es handelt sich um einen hybriden Ansatz, der die besten Eigenschaften von 3rd Normal Form (3NF) und Sternschema umfasst. Das Design ist flexibel, skalierbar, konsistent und an die Anforderungen des Unternehmens anpassbar. Es ist ein Datenmodell, das speziell für die Anforderungen von Enterprise Data Warehouses entwickelt wurde.\grqq\cite{DL:Data_Vault_Basics}\cite{DeepL}
+\end{quote}
+Ein Data Vault ermöglicht demnach eine flexible und Aufwandsarme Anpassung an eine Data Warehouse Lösung.
+Ein Data Vault nutzt ein Konzept aus Hubs, Links und Satelliten, um die Skalierung einfacher zu gestalten:
+\begin{itemize}
+	\item {Hubs}\newline
+		Alle Informationen die ein Geschäftskonzept eindeutig beschreiben (bspw.: Kundennummer bei einem Kunden) werden in Hubs abgelegt. Hubs repräsentieren demnach die Kernobjekte der jeweiligen Geschäftslogik. Ein Hub lässt sich als Liste von eindeutigen Geschäftsschlüsseln beschreiben, da er neben einem fachlichen Schlüssel zusätzlich einen künstlichen Primärschlüssel beinhaltet, um fachliche Entitäten zu identifizieren. Weiterhin sind hier technische Informationen über das Quellsystem oder das Ladedatum enthalten, welche als Integrationspunkt für (neue) Daten aus verschiedenen Quellen dienen
+	\item {Links}\newline
+		In den Links sind alle Beziehungen zwischen Geschäftsobjekten abgelegt. Solch eine Beziehung kann beispielsweise die Zuordnung eines Produktes zu einem Hersteller sein. Links werden demnach als Verknüpfung zwischen zwei oder mehreren Hubs verwendet. Hierfür werden die technischen Primärschlüssel(Surrogatschlüssel) genutzt. Um die Erweiterung technisch einfacher zu machen werden die Beziehungen in einem Data Vault immer als \glqq n:n-Beziehungen\footnote{Eine Entitätsmenge hat mehrere Beziehungen und kann mehrere Beziehungen eingehen}\grqq modelliert. Dadurch muss wegen einer Erweiterung nicht das Datenmodell geändert werden.
+	\item {Satelliten}\newline
+		Die Satelliten beinhalten alle Attribute, die ein Geschäftskonzept oder eine Beziehung beschreiben. Dies sind beispielsweise Namen und Alter von Kunden. Satelliten enthalten zusätzlich auch Angaben zu Datenquellen und Ladezeit und sind zu Hubs oder Links zugeordnet. Es können zu Hubs oder Links mehrere Satelliten gehören. 
+\end{itemize}
+Durch dieses Konzept beruht eine Verknüpfung zwischen Entitäten immer auf der Modellierung über Links, die auf Hubs verweisen. 
+\cite{Wikipedia:Data_Vault}\cite{DDA:Data_Vault}\cite{DL:Data_Vault}\cite{taod:Data_Vault}
+
+\subsubsection{Data Warehouse nach Inmon}
+William Harvey \glqq Bill\grqq Inmon (*20.Juli 1945) gilt als \glqq Vater des Data Warehousing\grqq\cite{Wikipedia:Inmon}. Der Beginn seines Ansatzes ist der des \glqq Enterprise Data Model (EDM)\grqq. Dieses beschreibt die Sicht auf Daten die innerhalb eines gesamten Unternehmens produziert und konsumiert werden. Ein EDM repräsentiert Daten System- oder Anwendungsunabhängig.\cite{TDAN:EDM} Dieses Model identifiziert einen Schlüsselbereich und die Schlüssel-Entitäten mit denen das Unternehmen arbeitet. Bei Bill Inmon handelt es sich bei einem Data Warehouse um \glqq themenorientierte, nichtflüchtige, integrierte, zeitvariante Datenerfassung zur Unterstützung von Managemententscheidungen\grqq. Dies bedeutet:
+\begin{itemize}
+	\item {Themenorientiert:}\newline Zweck des DW ist nicht die Erfüllung einer dedizierten Aufgabe, sondern die Unterstützung übergreifender Auswertungsmöglichkeiten
+	 \item{nicht-flüchtig:}\newline Daten im DW werden i.d.R. nicht mehr geändert
+	 \item{integriert:}\newline Daten aus mehreren (inkonsistenten) Datenquellen werden integriert und auf einen Standard standardisiert
+	 \item {zeitvariant:} \newline Hitorische Daten, die den Vergleich von Daten über die Zeit ermöglichen und über langen Zeitraum gespeichert werden
+\end{itemize}
+Daraus wird ein logisches Modell erstellt, welches alle Attribute enthält, die einer  Entität zugeordnet sind.
+\begin{quote}
+	Beispielsweise können solche Attribute die \underline{Kundennummer}, der KundenName, das Geschlecht und das Alter sein, die sich auf die Entität Kunde beziehen.\cite{ITEW:DataWarehouse}
+\end{quote}
+Der Ansatz nach Inmon verwendet eine normalisierte Form der Datenmodellierung, um Redundanzen so weit wie möglich zu vermeiden. Daraus ergibt sich eine eindeutige Identifizierung der Anforderungen und eine Vermeidung von Unregelmäßigkeiten wenn Daten aktualisiert werden. Ein weiterer Vorteil dieses Top-Down-Ansatzes ist die Robustheit gegenüber Änderungen und die Erhaltung der Perspektive auf die Daten über einen Data Mart hinweg.
+Data Marts beim Inmon-Ansatz in der Regel für jeden Geschäftsbereich seperat erstellt.
+\cite{Wikipedia:Inmon}\cite{Astera:Kimmball_Inmon}
+\subsubsection{Data Warehouse nach Kimball}
+Ralph Kimball beschreibt den Aufbau eines Data Warehouses als Bottom-Up- Architekturdesign. Dieses Design bildet zuerst Data Marts auf Basis der Geschäftsanforderungen, für die das Data Ware-house aufgebaut werden soll. Mittels eines ETL-Tools (Informatica) werden die primären Datenquellen ausgewertet und es werden verschiedene Transformationen durchgeführt, um die Daten in einen Staging-Bereich des relationalen Datenbankservers zu laden. 
+Sind die Daten im Staging-Bereich des Data Warehouses umfasst das Laden der Daten in ein Modell, welches bewusst denormalisiert ist. Dieses Modell partitioniert\footnote{lat.: (Ein)teilung von zusammenhängenden aufeinanderfolgender Datenblöcke auf einem Speichermedium} Daten in eine Faktentabelle, die numerische Transaktionsdaten umfasst.
+Das Grundelement der Dimension ist das Sternschema. Dieses begrenzt eine Faktentabelle durch mehrere Dimensionen. 
+\cite{Astera:Kimmball_Inmon}\cite{ITEW:Patrik_02.05}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.4]{Images/Star-Schema}
+		\caption{Stern-Modellierung nach dem Data Warehouse Ansatz von Bill Inmon}
+		\label{fig:Star-Schema}
+	\end{center}
+\end{figure}
+In \autoref{fig:Star-Schema} ist eine Modellierung nach Kimball zu sehen. Es gibt eine zentrale Tabelle \glqq Verkauf\grqq die alle Informationen zum Verkauf enthält. darum herum werden einzelne Attribute zu den Entitäten des Verkaufs in eigenen Tabellen modelliert.
+
+Eine weitere Art des Star-Schemas ist das \glqq Snowflake-Scheme\grqq (Schneflockenschema). Diese Modellierung stellt eine Verbesserung des Star-Schemas dar. Die Faktentabelle bleibt bei diesem Schema unverändert allerdings werden hier die Dimensionen durch Klassifizierung und Normalisierung verfeinert.
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.4]{Images/snowflake}
+		\caption{Snowflake-Schema der Datenmodellierung\cite{Wikipedia:Snowflake}}
+		\label{fig:snowflake}
+	\end{center}
+\end{figure}
+In \autoref{fig:snowflake} ist die Weiterentwicklung zu sehen. Hier ist erkennbar, dass die Faktentabelle im Zentrum und die Dimensionstabellen darum herum eine Schneeflocke bilden, die sich immer weiter verästeln kann. So ist im Bild die Dimension Ort weiter in mehrere Dimensionen unterteilt. Zum Ort gibt es gewisse weitere Attribute (bspw. Postleitzahl) die in weiteren Dimensionen abgelegt sind. Daher kann man das Snowflake-Schema als in Star-Schema definieren, in dessen Dimensionen weiter Star-Schemen modelliert sind.\cite{tecchanel:snowflake}
+Diese dimensionale Modellierung ist eine Abbildung des dimensionalen Würfels der eine Sicht auf einen Sachverhalt aus mehreren Dimensionen ermöglicht.
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.4]{Images/Mehrdim_DAtensicht}
+		\caption{Allgemeine Mehrdimensionale Sicht auf Kennzahlen(Faktentabelle) im Data Warehouse}
+		\label{fig:Mehrdim}
+	\end{center}
+\end{figure}
+\autoref{fig:Mehrdim} zeigt die allgemeine Mehrdimensionale Sicht auf die Kennzahlen im Data Warehouse. Diese Kennzahlen lassen sich mit verschiedenen Parameter, wie im Beispiel Region, Branche, Zeit, betrachten und es lassen sich dadurch dediziert einzelne oder gebündelte Daten entnehmen. Weiter ist im Würfel auch ein Ansatz der snowflake Modellierung zu sehen, da das Jahr \glqq 2019\grqq in weitere Dimensionen wie zunächst das \glqq Halbjahr\grqq und danach das \glqq Quartal\grqq unterteilt ist.
+\cite{Astera:Kimmball_Inmon}\cite{ITEW:Patrik_02.05}\cite{ITEW:DataWarehouse}
